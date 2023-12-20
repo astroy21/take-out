@@ -6,6 +6,7 @@ import com.sky.entity.Employee;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -28,4 +29,6 @@ public interface EmployeeMapper {
 
     //动态sql，写在配置文件中
     Page<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
+    //动态sql，写在配置文件中
+    void update(Employee employee);
 }
