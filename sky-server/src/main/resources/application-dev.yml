@@ -6,3 +6,5 @@ sky:
     database: sky_take_out
     username: root
     password: yyy1007370228
+  alioss:
+    endpoint: oss-cn-hangzhou.aliyuncs.com
