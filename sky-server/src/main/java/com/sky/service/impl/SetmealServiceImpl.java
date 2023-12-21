@@ -6,6 +6,7 @@ import com.sky.constant.MessageConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
+import com.sky.entity.Category;
 import com.sky.entity.Dish;
 import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
@@ -73,5 +74,33 @@ public class SetmealServiceImpl implements SetmealService {
             setmealMapper.deleteById(setmealId);
             setmealDishMapper.deleteBySetmealId(setmealId);
         });
+    }
+
+    @Override
+    public SetmealVO getByIdWithDishes(Long id) {
+        SetmealVO setmealVO = new SetmealVO();
+        // 1. 找到套餐
+        Setmeal setmeal = setmealMapper.getById(id);
+        BeanUtils.copyProperties(setmeal,setmealVO);
+        // 2. 找到菜品
+        setmealVO.setSetmealDishes(setmealDishMapper.getBySetmealId(id));
+        return setmealVO;
+    }
+
+    @Transactional
+    @Override
+    public void update(SetmealDTO setmealDTO) {
+        //1. 修改setmeal表
+        Setmeal setmeal = new Setmeal();
+        BeanUtils.copyProperties(setmealDTO,setmeal);
+        setmealMapper.update(setmeal);
+
+        //2. 修改setmeal_dish表
+        setmealDishMapper.deleteBySetmealId(setmeal.getId());
+        List<SetmealDish> setmealDishes = setmealDTO.getSetmealDishes();
+        setmealDishes.forEach(setmealDish -> {
+            setmealDish.setSetmealId(setmeal.getId());
+        });
+        setmealDishMapper.insertBatch(setmealDishes);
     }
 }
