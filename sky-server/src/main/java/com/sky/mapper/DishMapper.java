@@ -38,4 +38,7 @@ public interface DishMapper {
     // 动态sql，属性值为null时不修改
     @AutoFill(value = OperationType.UPDATE)
     void update(Dish dish);
+
+    //动态sql
+    List<Dish> list(Dish dish);
 }
