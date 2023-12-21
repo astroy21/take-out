@@ -41,4 +41,7 @@ public interface DishMapper {
 
     //动态sql
     List<Dish> list(Dish dish);
+
+    @Select("select d.* from dish d join setmeal_dish sd where d.id = sd.dish_id and sd.setmeal_id = #{setmealId}")
+    List<Dish> getBySetmealId(Long setmealId);
 }
