@@ -91,4 +91,10 @@ public class DishController {
         return Result.success(dishes);
     }
 
+    @PostMapping("/status/{status}")
+    public Result startOrStop(@PathVariable Integer status, Long id){
+        log.info("起售或停售菜品: status {},id {}",status,id);
+        dishService.startOrStop(status,id);
+        return Result.success();
+    }
 }
