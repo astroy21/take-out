@@ -186,4 +186,21 @@ public class OrderServiceImpl implements OrderService {
         orders.setStatus(Orders.CANCELLED);
         orderMapper.update(orders);
     }
+
+    @Override
+    public void repetition(Long id) {
+        Long userId = BaseContext.getCurrentId();
+        //查询订单详情
+        List<OrderDetail> orderDetails = orderDetailMapper.getByOrderId(id);
+        //从订单详情中获得购物车的对象
+        List<ShoppingCart> shoppingCartList = new ArrayList<>();
+        orderDetails.forEach(od->{
+            ShoppingCart cart = new ShoppingCart();
+            BeanUtils.copyProperties(od,cart,"id");
+            cart.setUserId(userId);
+            cart.setCreateTime(LocalDateTime.now());
+            shoppingCartList.add(cart);
+        });
+        shoppingCartMapper.insertBatch(shoppingCartList);
+    }
 }
