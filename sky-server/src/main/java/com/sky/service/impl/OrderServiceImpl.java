@@ -12,6 +12,7 @@ import com.sky.entity.OrderDetail;
 import com.sky.entity.Orders;
 import com.sky.entity.ShoppingCart;
 import com.sky.exception.AddressBookBusinessException;
+import com.sky.exception.OrderBusinessException;
 import com.sky.exception.ShoppingCartBusinessException;
 import com.sky.mapper.AddressBookMapper;
 import com.sky.mapper.OrderDetailMapper;
@@ -167,5 +168,22 @@ public class OrderServiceImpl implements OrderService {
         BeanUtils.copyProperties(orders,orderVO);
         orderVO.setOrderDetailList(orderDetails);
         return orderVO;
+    }
+
+    @Override
+    public void UserCancelById(Long id) throws Exception{
+        Orders orders = orderMapper.getById(id);
+        if(orders==null)
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        // 3已接单 4派送中 5已完成 6已取消
+        if(orders.getStatus() > 2)
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        //1待付款 2待接单
+        orders.setPayStatus(Orders.REFUND);
+
+        orders.setCancelTime(LocalDateTime.now());
+        orders.setCancelReason("用户取消");
+        orders.setStatus(Orders.CANCELLED);
+        orderMapper.update(orders);
     }
 }
