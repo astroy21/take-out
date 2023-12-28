@@ -32,4 +32,6 @@ public interface OrderMapper {
 
     //xml
     Double sumByMap(Map map);
+
+    Integer countByMap(Map map);
 }
